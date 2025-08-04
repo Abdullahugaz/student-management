@@ -1,22 +1,42 @@
 <template>
-  <div class="flex   text-gray-800 dark:text-white h-screen overflow-hidden">
+  <div class="flex h-screen text-gray-800 dark:text-black">
     <!-- Sidebar -->
-    <AppSidebar />
+    <AppSidebar :is-collapsed="isCollapsed" @toggle="toggleSidebar" />
 
-    <!-- Right section: Topbar + Content -->
-    <div class="flex flex-col flex-1 h-full overflow-hidden">
+    <!-- Main container -->
+    <div class="flex flex-col flex-1">
       <!-- Topbar -->
-      <AppTopbar />
+      <AppTopbar :is-collapsed="isCollapsed" />
 
-      <!-- Main content area -->
-      <div class="bg-white shadow-md flex flex-col justify-start items-center ml-[260px] h-screen">
+      <!-- Main content -->
+      <main
+        :class="[
+          'transition-all duration-300 flex-1 overflow-auto bg-gray-50 p-6',
+          isCollapsed ? 'ml-20' : 'ml-[17.5rem]',
+          'pt-16' // reserve space if Topbar is fixed height
+        ]"
+      >
         <router-view />
-      </div>
+      </main>
     </div>
   </div>
 </template>
 
-<script setup>
-import AppSidebar from './AppSidebar.vue';
-import AppTopbar from './AppTopbar.vue';
+<script>
+import AppSidebar from './AppSidebar.vue'
+import AppTopbar from './AppTopbar.vue'
+
+export default {
+  components: { AppSidebar, AppTopbar },
+  data() {
+    return {
+      isCollapsed: false
+    }
+  },
+  methods: {
+    toggleSidebar() {
+      this.isCollapsed = !this.isCollapsed
+    }
+  }
+}
 </script>
