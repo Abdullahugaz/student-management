@@ -1,44 +1,47 @@
 <template>
-  <div class="max-w-md mx-auto mt-20 p-6 bg-white rounded-lg shadow">
-    <h1 class="text-2xl font-bold mb-4 text-center">Student Login</h1>
+  <div class="w-full pt-36 lg:pt-32 flex justify-center">
+    <form @submit.prevent="loginUser" class="rounded-xl w-full max-w-md p-6 bg-white shadow-lg">
+      <h2 class="text-xl font-bold mb-4 text-center">Login</h2>
 
-    <form @submit.prevent="handleLogin" class="space-y-4">
       <!-- Email -->
-      <div>
+      <div class="mb-4">
         <label class="form-label">Email</label>
         <input
-          v-model="email"
           type="email"
-          placeholder="email@example.com"
+          v-model.trim="form.email"
           class="form-input"
-          required
+          placeholder="email@example.com"
         />
+        <div v-if="v$.form.email.$error" class="form-error">
+          Valid email is required
+        </div>
       </div>
 
       <!-- Password -->
-      <div>
+      <div class="mb-4">
         <label class="form-label">Password</label>
         <input
-          v-model="password"
           type="password"
-          placeholder="Enter password"
+          v-model.trim="form.password"
           class="form-input"
-          required
+          placeholder="Enter password"
         />
+        <div v-if="v$.form.password.$error" class="form-error">
+          Password is required
+        </div>
       </div>
 
-      <!-- Error message -->
-      <div v-if="errorMessage" class="text-red-500 text-sm">
+      <!-- Error -->
+      <div v-if="errorMessage" class="form-error mb-3">
         {{ errorMessage }}
       </div>
 
-      <!-- Submit button -->
+      <!-- Login Button -->
       <button
         type="submit"
-        :disabled="loading"
-        class="w-full bg-primary text-white py-2 rounded-lg hover:bg-primary-dark disabled:opacity-50"
+        class="w-full py-2 bg-primary text-white rounded-lg hover:bg-primary-dark"
       >
-        {{ loading ? 'Logging in...' : 'Login' }}
+        Login
       </button>
     </form>
   </div>
@@ -48,42 +51,62 @@
 import { ref } from 'vue'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
+import { useVuelidate } from '@vuelidate/core'
+import { required, email } from '@vuelidate/validators'
 
-const email = ref('')
-const password = ref('')
-const loading = ref(false)
-const errorMessage = ref('')
 const router = useRouter()
 
-async function handleLogin() {
-  loading.value = true
+const form = ref({
+  email: '',
+  password: ''
+})
+
+const errorMessage = ref('')
+
+async function loginUser() {
   errorMessage.value = ''
+  const valid = await v$.value.$validate()
+  if (!valid) return
 
   try {
-    const res = await axios.post('http://localhost:5000/api/students/login', {
-      email: email.value,
-      password: password.value
-    })
+    const res = await axios.post(
+      'http://localhost:5000/api/auth/login',
+      form.value,
+      { headers: { 'Content-Type': 'application/json' } }
+    )
 
-    // Save token + student info in localStorage
+    // Save token in localStorage
     localStorage.setItem('token', res.data.token)
-    localStorage.setItem('student', JSON.stringify(res.data.student))
 
-    // Redirect to dashboard after login
-    router.push({ name: 'app.dashboard' })
+    alert('✅ Login successful!')
+    router.push({ name: 'dashboard' }) // Change this route to your dashboard/home
   } catch (err) {
-    errorMessage.value = err.response?.data?.error || 'Login failed'
-  } finally {
-    loading.value = false
+    console.error('❌ Login error:', err.response?.data || err.message)
+    errorMessage.value = err.response?.data?.error || 'Invalid email or password'
   }
 }
+
+const rules = {
+  form: {
+    email: { required, email },
+    password: { required }
+  }
+}
+
+const v$ = useVuelidate(rules, { form })
 </script>
 
 <style scoped>
 .form-label {
-  @apply block text-sm font-medium text-gray-700 mb-1;
+  @apply text-darkone dark:text-dark-darkone ml-1 font-normal text-sm pb-1 capitalize flex items-center space-x-2;
 }
 .form-input {
-  @apply w-full border rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500;
+  @apply bg-bginput dark:bg-dark-bginput border-bordercolor dark:border-dark-bordercolor
+         focus:ring-0 focus:border-bordercolor dark:focus:border-dark-bordercolor
+         text-darkone text-[14px] dark:text-dark-darkone rounded-lg block w-full p-2.5
+         placeholder-gray-400 placeholder:text-xs dark:placeholder-slate-500 placeholder:capitalize dark:focus:ring-0;
+}
+.form-error {
+  @apply text-red-400 ml-1 text-xs;
 }
 </style>
