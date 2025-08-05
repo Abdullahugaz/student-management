@@ -8,9 +8,11 @@
     <!-- Logo and toggle -->
     <div class="flex items-center justify-between p-4">
       <img src="../assets/yiksi .png" alt="Logo" class="w-12 h-12" />
-      <span v-if="!isCollapsed" class="text-[18px] font-bold text-gray-800 dark:text-white">
+      
+      <span v-if="!isCollapsed" class="text-[17px] font-bold text-gray-800 dark:text-white">
         Student Management
       </span>
+      
       <button @click="$emit('toggle')" class="ml-auto text-gray-500 dark:text-gray-300">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
@@ -42,23 +44,25 @@
 
         <!-- Students link -->
         <li>
-          <router-link
-            :to="{ name: 'app.Form' }"
-            @click="activeLink('students')"
-            class="flex items-center gap-3 p-2 rounded-lg transition-all"
-            :class="{
-              'bg-purple-100 text-purple-700': active === 'students',
-              'text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-800': active !== 'students'
-            }"
-          >
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
-                 viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M12 14L2 9l10-5 10 5-10 5zm0 0v6m0-6l6.16-3.09A12.08 12.08 0 0112 21a12.08 12.08 0 01-6.16-10.09L12 14z" />
-            </svg>
-            <span v-if="!isCollapsed" class="text-sm font-medium">Students</span>
-          </router-link>
-        </li>
+  <router-link
+    :to="{ name: 'app.students' }"
+    @click="activeLink('students')"
+    class="flex items-center gap-3 p-2 rounded-lg transition-all"
+    :class="{
+      'bg-purple-100 text-purple-700': active === 'students',
+      'text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-800': active !== 'students'
+    }"
+  >
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
+         viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round"
+            d="M12 14L2 9l10-5 10 5-10 5zm0 0v6m0-6l6.16-3.09A12.08 12.08 0 0112 21a12.08 12.08 0 01-6.16-10.09L12 14z" />
+    </svg>
+    <span v-if="!isCollapsed" class="text-sm font-medium">Students</span>
+  </router-link>
+</li>
+
+        
       </ul>
 
       <!-- Bottom button -->

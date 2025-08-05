@@ -1,4 +1,6 @@
 <template>
+  <body class="font-sans bg-white dark:bg-gray-900 text-gray-800 dark:text-white">
+
   <div class="flex h-screen text-gray-800 dark:text-black">
     <!-- Sidebar -->
     <AppSidebar :is-collapsed="isCollapsed" @toggle="toggleSidebar" />
@@ -20,6 +22,7 @@
       </main>
     </div>
   </div>
+  </body>
 </template>
 
 <script>
