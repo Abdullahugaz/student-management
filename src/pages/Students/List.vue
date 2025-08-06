@@ -1,6 +1,6 @@
 <template>
-  <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-4">
-    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+  <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 ">
+    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 ">
       <thead class="bg-gray-50 dark:bg-gray-700">
         <tr>
           <th class="px-4 py-2 text-left text-sm font-medium text-gray-600 dark:text-gray-300">Profile</th>
@@ -15,9 +15,7 @@
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-        <tr
-          v-for="student in students"
-          :key="student._id"
+       <tr v-for="student in students" :key="student._id"
           class="hover:bg-gray-100 dark:hover:bg-gray-600"
         >
           <td class="px-4 py-2">
@@ -35,8 +33,8 @@
           <td class="px-4 py-2 text-gray-900 dark:text-gray-200">{{ student.status }}</td>
           <td class="px-4 py-2 text-gray-900 dark:text-gray-200">{{ formatDate(student.submission_date) }}</td>
           <td class="px-4 py-2 flex gap-2">
-            <button
-              @click="deleteStudent(student._id)"
+            <button @click="deleteStudent(student._id)"
+
               class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
             >
               Delete
@@ -77,11 +75,12 @@ async function fetchStudents() {
 }
 
 async function deleteStudent(id) {
-  console.log('Deleting student ID:', id) // debug log
-  if (!confirm('Are you sure you want to delete this student?')) return
+  console.log('Deleting ID:', id) // should log 24-char Mongo ID
+  if (!confirm('Are you sure?')) return
 
   try {
-    await axios.delete(`http://localhost:5000/api/students/${id}`)
+    await axios.delete(`http://localhost:5000/api/students/${id.trim()}`)
+
     students.value = students.value.filter(s => s._id !== id)
     alert('✅ Student deleted successfully!')
   } catch (err) {
@@ -89,6 +88,7 @@ async function deleteStudent(id) {
     alert(`❌ Error deleting student: ${err.response?.data?.error || err.message}`)
   }
 }
+
 
 onMounted(fetchStudents)
 </script>

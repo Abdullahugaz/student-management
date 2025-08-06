@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full pt-36 lg:pt-32">
+  <div class="w-full pt-36 lg:pt-32 sm:flex">
     <form @submit.prevent="registerStudent" class="rounded-xl w-full">
       <div class="grid grid-flow-row gap-2 md:gap-5 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-12">
 
