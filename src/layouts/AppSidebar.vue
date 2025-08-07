@@ -59,6 +59,42 @@
             <span v-if="!isCollapsed" class="text-sm font-medium">Students</span>
           </router-link>
         </li>
+        <li>
+          <router-link
+            :to="{ name: 'app.students' }"
+            @click="activeLink('students')"
+            class="flex items-center gap-3 p-2 rounded-lg transition-all"
+            :class="{
+              'bg-purple-100 text-purple-700': active === 'students',
+              'text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-800': active !== 'students'
+            }"
+          >
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
+                 viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M12 14L2 9l10-5 10 5-10 5zm0 0v6m0-6l6.16-3.09A12.08 12.08 0 0112 21a12.08 12.08 0 01-6.16-10.09L12 14z" />
+            </svg>
+            <span v-if="!isCollapsed" class="text-sm font-medium">Courses</span>
+          </router-link>
+        </li>
+        <li>
+          <router-link
+            :to="{ name: 'app.students' }"
+            @click="activeLink('students')"
+            class="flex items-center gap-3 p-2 rounded-lg transition-all"
+            :class="{
+              'bg-purple-100 text-purple-700': active === 'students',
+              'text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-800': active !== 'students'
+            }"
+          >
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
+                 viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M12 14L2 9l10-5 10 5-10 5zm0 0v6m0-6l6.16-3.09A12.08 12.08 0 0112 21a12.08 12.08 0 01-6.16-10.09L12 14z" />
+            </svg>
+            <span v-if="!isCollapsed" class="text-sm font-medium">Attendance</span>
+          </router-link>
+        </li>
       </ul>
 
       <!-- Logout Button -->
@@ -100,11 +136,12 @@ export default {
     activeLink(val) {
       this.active = val
     },
-    logout() {
-      localStorage.removeItem('token')
-      this.$router.push({ name: 'login' })
-      alert('✅ You have been logged out.')
-    }
+   logout() {
+  localStorage.removeItem('token')
+  this.$router.push({ name: 'app.login' })
+  alert('✅ You have been logged out.')
+}
+
   }
 }
 </script>

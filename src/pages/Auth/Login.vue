@@ -11,6 +11,7 @@
       <h1 class="text-3xl font-bold mb-2">Welcome to login system</h1>
       <p class="text-gray-500 mb-8">Sign in by entering the information below</p>
 
+      <!-- Login Form -->
       <form @submit.prevent="loginUser" class="max-w-sm">
         <!-- Email -->
         <div class="mb-4">
@@ -80,11 +81,11 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { useVuelidate } from '@vuelidate/core'
 import { required, email } from '@vuelidate/validators'
-import { loginStudent } from '@/services/api' // <-- use API service file
+import { loginStudent } from '@/services/api' // API service
 
 const router = useRouter()
 
@@ -92,6 +93,7 @@ const form = ref({
   email: '',
   password: ''
 })
+
 const errorMessage = ref('')
 const loading = ref(false)
 
@@ -109,10 +111,13 @@ async function loginUser() {
   if (!isValid) return
 
   loading.value = true
+
   try {
     const res = await loginStudent(form.value.email, form.value.password)
     localStorage.setItem('token', res.data.token)
-    router.push({ name: 'dashboard' })
+
+    await nextTick() // Ensure reactivity completes
+    router.push({ name: 'app.dashboard' })
   } catch (err) {
     errorMessage.value = err.response?.data?.error || 'Invalid email or password'
   } finally {

@@ -1,198 +1,130 @@
 <template>
-  <div class="w-full pt-36 lg:pt-32 sm:flex">
-    <form @submit.prevent="registerStudent" class="rounded-xl w-full">
-      <div class="grid grid-flow-row gap-2 md:gap-5 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-12">
-
+  <div class="w-full pt-10">
+    <form @submit.prevent="submitForm" class="bg-white dark:bg-gray-800 p-6 rounded shadow">
+      <div class="grid gap-4 md:grid-cols-2">
         <!-- Full Name -->
-        <div class="col-span-6">
-          <label class="form-label">Full Name</label>
-          <input type="text" v-model="form.full_name" placeholder="Full Name" class="form-input" />
-          <small v-for="error of v$.form.full_name?.$errors" :key="error.$uid" class="form-error">{{ error.$message }}</small>
+        <div>
+          <label>Full Name</label>
+          <input v-model="form.full_name" type="text" class="form-input" />
         </div>
 
         <!-- Email -->
-        <div class="col-span-6">
-          <label class="form-label">Email</label>
-          <input type="email" v-model="form.email" placeholder="email@example.com" class="form-input" />
-          <small v-for="error of v$.form.email?.$errors" :key="error.$uid" class="form-error">{{ error.$message }}</small>
+        <div>
+          <label>Email</label>
+          <input v-model="form.email" type="email" class="form-input" />
         </div>
 
         <!-- Phone -->
-        <div class="col-span-6">
-          <label class="form-label">Phone</label>
-          <input type="tel" v-model="form.phone" placeholder="+25212345678" class="form-input" />
-          <small v-for="error of v$.form.phone?.$errors" :key="error.$uid" class="form-error">{{ error.$message }}</small>
+        <div>
+          <label>Phone</label>
+          <input v-model="form.phone" type="tel" class="form-input" />
         </div>
 
         <!-- Department -->
-        <div class="col-span-6">
-          <label class="form-label">Department</label>
+        <div>
+          <label>Department</label>
           <select v-model="form.department" class="form-input">
-            <option value="">Select Department</option>
+            <option value="">Select</option>
             <option value="cs">Computer Science</option>
             <option value="math">Mathematics</option>
             <option value="bio">Biology</option>
           </select>
-          <small v-for="error of v$.form.department?.$errors" :key="error.$uid" class="form-error">{{ error.$message }}</small>
-        </div>
-
-        <!-- Profile Picture -->
-        <div class="col-span-6">
-          <label class="form-label">Profile Picture</label>
-          <input type="file" name="profile_picture" accept="image/*" class="form-input" @change="handleProfilePictureChange" />
-          <div v-if="profilePicturePreview" class="mt-2">
-            <div class="w-16 h-16 rounded-full overflow-hidden border">
-              <img :src="profilePicturePreview" class="w-full h-full object-cover" />
-            </div>
-          </div>
-          <small v-for="error of v$.form.profile_picture?.$errors" :key="error.$uid" class="form-error">{{ error.$message }}</small>
         </div>
 
         <!-- Address -->
-        <div class="col-span-6">
-          <label class="form-label">Address</label>
-          <input type="text" v-model="form.address" placeholder="Full Address" class="form-input" />
-          <small v-for="error of v$.form.address?.$errors" :key="error.$uid" class="form-error">{{ error.$message }}</small>
+        <div>
+          <label>Address</label>
+          <input v-model="form.address" type="text" class="form-input" />
+        </div>
+
+        <!-- Profile Picture (Optional) -->
+        <div>
+          <label>Profile Picture (optional)</label>
+          <input type="file" @change="handleFileChange" class="form-input" accept="image/*" />
         </div>
 
         <!-- Password -->
-        <div class="col-span-6">
-          <label class="form-label">Password</label>
-          <input type="password" v-model="form.password" placeholder="Enter password" class="form-input" />
-          <small v-for="error of v$.form.password?.$errors" :key="error.$uid" class="form-error">{{ error.$message }}</small>
+        <div>
+          <label>Password</label>
+          <input v-model="form.password" type="password" class="form-input" />
         </div>
 
         <!-- Status -->
-        <div class="col-span-6">
-          <label class="form-label">Status</label>
+        <div>
+          <label>Status</label>
           <select v-model="form.status" class="form-input">
             <option value="draft">Draft</option>
             <option value="submitted">Submitted</option>
           </select>
-          <small v-for="error of v$.form.status?.$errors" :key="error.$uid" class="form-error">{{ error.$message }}</small>
         </div>
 
         <!-- Submission Date -->
-        <div class="col-span-6">
-          <label class="form-label">Submission Date</label>
-          <Datepicker v-model="form.submission_date" :format="'yyyy-MM-dd'" class="form-input" />
-          <small v-for="error of v$.form.submission_date?.$errors" :key="error.$uid" class="form-error">{{ error.$message }}</small>
+        <div v-if="form.status === 'submitted'">
+          <label>Submission Date</label>
+          <input v-model="form.submission_date" type="date" class="form-input" />
         </div>
-
       </div>
 
       <div class="mt-6">
-        <button type="submit" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark">
-          Register
-        </button>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Submit</button>
+        <p class="text-red-500 mt-2" v-if="errorMessage">{{ errorMessage }}</p>
+        <p class="text-green-500 mt-2" v-if="successMessage">{{ successMessage }}</p>
       </div>
-
-      <div v-if="errorMessage" class="text-red-500 mt-3">{{ errorMessage }}</div>
     </form>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import axios from 'axios'
-import { useVuelidate } from '@vuelidate/core'
-import { required, email } from '@vuelidate/validators'
-import Datepicker from 'vue3-datepicker'
+import { createStudent } from '@/services/api'
 
 const form = ref({
   full_name: '',
   email: '',
   phone: '',
   department: '',
-  profile_picture: null,
   address: '',
   password: '',
   status: 'draft',
-  submission_date: new Date()
+  submission_date: '',
+  profile_picture: null
 })
 
 const errorMessage = ref('')
-const profilePicturePreview = ref(null)
+const successMessage = ref('')
 
-function handleProfilePictureChange(e) {
+function handleFileChange(e) {
   const file = e.target.files[0]
-  if (file) {
-    form.value.profile_picture = file
-    profilePicturePreview.value = URL.createObjectURL(file)
-  }
+  if (file) form.value.profile_picture = file
 }
 
-async function registerStudent() {
+async function submitForm() {
   errorMessage.value = ''
-  const valid = await v$.value.$validate()
-  if (!valid) return
+  successMessage.value = ''
 
   const formData = new FormData()
   for (const key in form.value) {
-    if (key === 'submission_date' && form.value.submission_date instanceof Date) {
-      formData.append(key, form.value.submission_date.toISOString().split('T')[0])
+    if (key === 'profile_picture' && form.value.profile_picture) {
+      formData.append('profile_picture', form.value.profile_picture)
+    } else if (key === 'submission_date' && form.value.status === 'submitted') {
+      formData.append(key, form.value.submission_date)
     } else {
       formData.append(key, form.value[key])
     }
   }
 
   try {
-    const res = await axios.post('http://localhost:5000/api/students', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' }
-    })
-    alert(res.data.message)
-    resetForm()
+    const res = await createStudent(formData)
+    successMessage.value = res.data.message || 'Registered successfully'
   } catch (err) {
-    console.error(err.response?.data || err.message)
-    errorMessage.value = err.response?.data?.error || 'Error submitting form'
+    console.error(err)
+    errorMessage.value = err.response?.data?.error || 'Registration failed'
   }
 }
-
-function resetForm() {
-  form.value = {
-    full_name: '',
-    email: '',
-    phone: '',
-    department: '',
-    profile_picture: null,
-    address: '',
-    password: '',
-    status: 'draft',
-    submission_date: new Date()
-  }
-  profilePicturePreview.value = null
-}
-
-const rules = {
-  form: {
-    full_name: { required },
-    email: { required, email },
-    phone: { required },
-    department: { required },
-    profile_picture: { required },
-    address: { required },
-    password: { required },
-    status: { required },
-    submission_date: { required }
-  }
-}
-
-const v$ = useVuelidate(rules, { form })
 </script>
 
-
-
 <style scoped>
-.form-label {
-  @apply text-darkone dark:text-dark-darkone ml-1 font-normal text-sm pb-1 capitalize;
-}
 .form-input {
-  @apply bg-bginput dark:bg-dark-bginput border-bordercolor dark:border-dark-bordercolor 
-         focus:ring-0 focus:border-bordercolor dark:focus:border-dark-bordercolor 
-         text-darkone text-[14px] dark:text-dark-darkone rounded-lg block w-full 
-         p-2.5 placeholder-gray-400 placeholder:text-xs dark:placeholder-slate-500;
-}
-.form-error {
-  @apply text-red-400 ml-1 text-xs;
+  @apply block w-full p-2 border rounded bg-white text-black dark:bg-gray-700 dark:text-white;
 }
 </style>

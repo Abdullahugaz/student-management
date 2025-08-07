@@ -6,11 +6,12 @@ const RegisterPage = () => import('@/pages/Auth/Register.vue')
 export default [
   // Auth (no layout)
   {
-    path: '/login',
-    name: 'app.login',
-    component: LoginPage,
-    meta: { title: 'Login' }
-  },
+  path: '/login',
+  name: 'app.login',
+  component: LoginPage,
+  meta: { title: 'Login' }
+},
+
   {
     path: '/register',
     name: 'app.Register',
