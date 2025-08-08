@@ -9,7 +9,7 @@
         <p class="text-3xl font-bold text-blue-600">120</p>
       </div>
       <div class="bg-white p-4 rounded shadow">
-        <h2 class="text-lg font-semibold mb-2">Active Courses</h2>
+        <h2 class="text-lg font-semibold mb-2">Active Course</h2>
         <p class="text-3xl font-bold text-green-600">8</p>
       </div>
       <div class="bg-white p-4 rounded shadow">
