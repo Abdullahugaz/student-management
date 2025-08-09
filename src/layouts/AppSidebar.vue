@@ -59,7 +59,7 @@
             <span v-if="!isCollapsed" class="text-sm font-medium">Students</span>
           </router-link>
         </li>
-        <li>
+        <!-- <li>
           <router-link
             :to="{ name: 'app.students' }"
             @click="activeLink('students')"
@@ -76,8 +76,8 @@
             </svg>
             <span v-if="!isCollapsed" class="text-sm font-medium">Courses</span>
           </router-link>
-        </li>
-        <li>
+        </li> -->
+        <!-- <li>
           <router-link
             :to="{ name: 'app.students' }"
             @click="activeLink('students')"
@@ -94,7 +94,7 @@
             </svg>
             <span v-if="!isCollapsed" class="text-sm font-medium">Attendance</span>
           </router-link>
-        </li>
+        </li> -->
       </ul>
 
       <!-- Logout Button -->
