@@ -7,7 +7,7 @@
         @click="toggleView"
         class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark"
       >
-        {{ showForm ? 'Back to List' : 'New Record' }}
+        {{ showForm ? 'Cancel' : 'New Record' }}
       </button>
     </div>
 
