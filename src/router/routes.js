@@ -3,6 +3,8 @@ const DashboardView = () => import('@/views/DashboardView.vue')
 const StudentsPage = () => import('@/pages/Students/Index.vue')
 const LoginPage = () => import('@/pages/Auth/Login.vue')
 const RegisterPage = () => import('@/pages/Auth/Register.vue')
+const CoursePage = () => import('@/pages/Courses/Index.vue')
+const InstructorPage =()=> import('@/pages/Instructors/Form.vue')
 
 export default [
   {
@@ -33,7 +35,20 @@ export default [
         name: 'app.students',
         component: StudentsPage,
         meta: { title: 'Students', requiresAuth: true }
+      },
+      {
+        path: 'Courses',
+        name: 'app.courses',
+        component: CoursePage,
+        meta: { title: 'Courses', requiresAuth: true }
+      },
+       {
+        path: 'Instructors',
+        name: 'app.instructors',
+        component: InstructorPage,
+        meta: { title: 'Courses', requiresAuth: true }
       }
+      
     ]
   }
 ]

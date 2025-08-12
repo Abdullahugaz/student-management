@@ -7,14 +7,20 @@
   >
     <!-- Logo and toggle -->
     <div class="flex items-center justify-between p-4">
-      <img src="../assets/yiksi.png" alt="Logo" class="w-12 h-12" />
+      <img src="../assets/yiksi.png" alt="School Management Logo" class="w-12 h-12" />
       <span v-if="!isCollapsed" class="text-[17px] font-bold text-gray-800 dark:text-white">
-        Student Management
+        School Management
       </span>
-      <button @click="$emit('toggle')" class="ml-auto text-gray-500 dark:text-gray-300">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-        </svg>
+      <button
+        @click="emit('toggle')"
+        class="ml-auto text-gray-500 dark:text-gray-300"
+        aria-label="Toggle sidebar"
+        :aria-expanded="!isCollapsed"
+      >
+        <ChevronLeft
+          class="w-5 h-5 transition-transform"
+          :class="isCollapsed ? 'rotate-180' : ''"
+        />
       </button>
     </div>
 
@@ -25,17 +31,11 @@
         <li>
           <router-link
             :to="{ name: 'app.dashboard' }"
-            @click="activeLink('dashboard')"
+            @click="setActive('dashboard')"
             class="flex items-center gap-3 p-2 rounded-lg transition-all"
-            :class="{
-              'bg-purple-100 text-purple-700': active === 'dashboard',
-              'text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-800': active !== 'dashboard'
-            }"
+            :class="linkClass('dashboard')"
           >
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
-                 viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M13 5v6h6" />
-            </svg>
+            <Home class="w-6 h-6" />
             <span v-if="!isCollapsed" class="text-sm font-medium">Dashboard</span>
           </router-link>
         </li>
@@ -44,57 +44,40 @@
         <li>
           <router-link
             :to="{ name: 'app.students' }"
-            @click="activeLink('students')"
+            @click="setActive('students')"
             class="flex items-center gap-3 p-2 rounded-lg transition-all"
-            :class="{
-              'bg-purple-100 text-purple-700': active === 'students',
-              'text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-800': active !== 'students'
-            }"
+            :class="linkClass('students')"
           >
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
-                 viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M12 14L2 9l10-5 10 5-10 5zm0 0v6m0-6l6.16-3.09A12.08 12.08 0 0112 21a12.08 12.08 0 01-6.16-10.09L12 14z" />
-            </svg>
+            <Users class="w-6 h-6" />
             <span v-if="!isCollapsed" class="text-sm font-medium">Students</span>
           </router-link>
         </li>
-        <!-- <li>
+
+        <!-- Courses -->
+        <li>
           <router-link
-            :to="{ name: 'app.students' }"
-            @click="activeLink('students')"
+            :to="{ name: 'app.courses' }"
+            @click="setActive('courses')"
             class="flex items-center gap-3 p-2 rounded-lg transition-all"
-            :class="{
-              'bg-purple-100 text-purple-700': active === 'students',
-              'text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-800': active !== 'students'
-            }"
+            :class="linkClass('courses')"
           >
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
-                 viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M12 14L2 9l10-5 10 5-10 5zm0 0v6m0-6l6.16-3.09A12.08 12.08 0 0112 21a12.08 12.08 0 01-6.16-10.09L12 14z" />
-            </svg>
+            <BookOpen class="w-6 h-6" />
             <span v-if="!isCollapsed" class="text-sm font-medium">Courses</span>
           </router-link>
-        </li> -->
-        <!-- <li>
+        </li>
+
+        <!-- Instructors -->
+        <li>
           <router-link
-            :to="{ name: 'app.students' }"
-            @click="activeLink('students')"
+            :to="{ name: 'app.instructors' }"
+            @click="setActive('instructors')"
             class="flex items-center gap-3 p-2 rounded-lg transition-all"
-            :class="{
-              'bg-purple-100 text-purple-700': active === 'students',
-              'text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-800': active !== 'students'
-            }"
+            :class="linkClass('instructors')"
           >
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
-                 viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M12 14L2 9l10-5 10 5-10 5zm0 0v6m0-6l6.16-3.09A12.08 12.08 0 0112 21a12.08 12.08 0 01-6.16-10.09L12 14z" />
-            </svg>
-            <span v-if="!isCollapsed" class="text-sm font-medium">Attendance</span>
+            <GraduationCap class="w-6 h-6" />
+            <span v-if="!isCollapsed" class="text-sm font-medium">Instructors</span>
           </router-link>
-        </li> -->
+        </li>
       </ul>
 
       <!-- Logout Button -->
@@ -105,12 +88,9 @@
                  text-red-600 hover:bg-red-50 
                  dark:text-red-400 dark:hover:bg-red-900 
                  rounded-lg transition"
+          aria-label="Log out"
         >
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
-               viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M17 16l4-4m0 0l-4-4m4 4H7" />
-          </svg>
+          <LogOut class="w-6 h-6" />
           <span v-if="!isCollapsed" class="ml-2 text-sm font-medium">Logout</span>
         </button>
       </div>
@@ -118,30 +98,52 @@
   </aside>
 </template>
 
-<script>
-export default {
-  name: 'AppSidebar',
-  props: {
-    isCollapsed: {
-      type: Boolean,
-      required: true
-    }
-  },
-  data() {
-    return {
-      active: 'dashboard'
-    }
-  },
-  methods: {
-    activeLink(val) {
-      this.active = val
-    },
-   logout() {
+<script setup>
+import { ref, watch, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { Home, Users, BookOpen, GraduationCap, LogOut, ChevronLeft } from 'lucide-vue-next'
+
+/* Destructure to avoid ESLint 'unused var' */
+const { isCollapsed } = defineProps({
+  isCollapsed: {
+    type: Boolean,
+    required: true
+  }
+})
+const emit = defineEmits(['toggle'])
+
+const route = useRoute()
+const router = useRouter()
+
+const active = ref('dashboard')
+
+const map = {
+  'app.dashboard': 'dashboard',
+  'app.students': 'students',
+  'app.courses': 'courses',
+  'app.instructors': 'instructors'
+}
+
+function syncActiveWithRoute() {
+  active.value = map[route.name] || 'dashboard'
+}
+
+function linkClass(key) {
+  return active.value === key
+    ? 'bg-purple-100 text-purple-700'
+    : 'text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-800'
+}
+
+function setActive(val) {
+  active.value = val
+}
+
+function logout() {
   localStorage.removeItem('token')
-  this.$router.push({ name: 'app.login' })
+  router.push({ name: 'app.login' })
   alert('✅ You have been logged out.')
 }
 
-  }
-}
+onMounted(syncActiveWithRoute)
+watch(() => route.name, syncActiveWithRoute)
 </script>

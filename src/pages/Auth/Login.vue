@@ -50,7 +50,7 @@
           <label class="flex items-center space-x-2 text-sm text-gray-600">
             <input type="checkbox" /> <span>Remember me</span>
           </label>
-          <a href="#" class="text-sm text-purple-600 hover:underline">Forgot Password?</a>
+          <!-- <a href="#" class="text-sm text-purple-600 hover:underline">Forgot Password?</a> -->
         </div>
 
         <!-- Error Message -->
@@ -66,10 +66,10 @@
         </button>
 
         <!-- Sign Up Link -->
-        <p class="text-sm text-gray-500 mt-4 text-center">
+        <!-- <p class="text-sm text-gray-500 mt-4 text-center">
           Don't have an account?
           <a href="#" class="text-purple-600 hover:underline">Sign up</a>
-        </p>
+        </p> -->
       </form>
     </div>
 
